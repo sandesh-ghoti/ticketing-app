@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: auth
-          image: us.gcr.io/ticketing-project-426515/auth
+          image: us-central1-docker.pkg.dev/long-stack-426216-q2/tickets-repo/auth
           resources:
             limits:
               memory: "300Mi"

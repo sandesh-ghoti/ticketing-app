@@ -5,9 +5,9 @@ manifests:
     - ./infra/k8s/*
 build:
   googleCloudBuild:
-    projectId: ticketing-project-426515
+    projectId: long-stack-426216-q2
   artifacts:
-    - image: us.gcr.io/ticketing-project-426515/auth
+    - image: us-central1-docker.pkg.dev/long-stack-426216-q2/tickets-repo/auth
       context: auth
       docker:
         dockerfile: Dockerfile
