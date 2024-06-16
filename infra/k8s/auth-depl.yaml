@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
         - name: auth
-          image: sandeshghoti/auth
+          image: us.gcr.io/ticketing-project-426515/auth
           resources:
             limits:
               memory: "300Mi"
