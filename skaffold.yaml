@@ -17,3 +17,11 @@ build:
         manual:
           - src: "src/**/*.ts"
             dest: .
+    - image: us-central1-docker.pkg.dev/long-stack-426216-q2/tickets-repo/client
+      context: client
+      docker:
+        dockerfile: Dockerfile
+      sync:
+        manual:
+          - src: "src/**/*.ts"
+            dest: .

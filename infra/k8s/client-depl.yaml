@@ -1,34 +1,34 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: auth-depl
+  name: client
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: auth
+      app: client
   template:
     metadata:
       labels:
-        app: auth
+        app: client
     spec:
       containers:
-        - name: auth
-          image: us-central1-docker.pkg.dev/long-stack-426216-q2/tickets-repo/auth
+        - name: client
+          image: us-central1-docker.pkg.dev/long-stack-426216-q2/tickets-repo/client
           resources:
             limits:
-              memory: "300Mi"
-              cpu: "200m"
+              memory: "500Mi"
+              cpu: "500m"
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  name: auth-srv
+  name: client-srv
 spec:
   selector:
-    app: auth
+    app: client
   ports:
-    - name: auth
+    - name: client
       protocol: TCP
       port: 3000
       targetPort: 3000
