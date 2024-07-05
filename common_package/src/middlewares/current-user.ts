@@ -1,7 +1,16 @@
 import { Request, Response, NextFunction } from "express";
 import jwt from "jsonwebtoken";
-import { UserPayload } from "../types/types";
+import { SessionPayload, UserPayload } from "../types/types";
 type userPayloadType = Extract<Request, UserPayload>;
+
+declare global {
+  namespace Express {
+    interface Request {
+      user?: UserPayload;
+      session?: SessionPayload;
+    }
+  }
+}
 
 /**
  * Middleware to attach the current user to the request object.

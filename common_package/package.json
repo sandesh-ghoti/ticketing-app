@@ -1,11 +1,11 @@
 {
   "name": "tickets-commonutils",
-  "version": "1.0.4",
+  "version": "1.0.6",
   "description": "common package",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "scripts": {
-    "compile": "rm -rf dist && tsc -d",
+    "build": "rm -rf dist && tsc -d",
     "pub": "git add . && git commit -m \"Updates\" && npm version patch && npm run build && npm publish"
   },
   "keywords": [
