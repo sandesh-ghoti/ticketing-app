@@ -45,7 +45,7 @@ jobs:
       # Configure Workload Identity Federation and generate an access token.
       # - id: 'auth'
       #   name: 'Authenticate to Google Cloud'
-      #   uses: 'google-github-actions/auth@v0'
+      #   uses: 'google-github-actions/auth@v2'
       #   with:
       #     token_format: 'access_token'
       #     workload_identity_provider: 'projects/123456789/locations/global/workloadIdentityPools/my-pool/providers/my-provider'
@@ -53,7 +53,7 @@ jobs:
 
       # Alternative option - authentication via credentials json
       # - id: 'auth'
-      #   uses: 'google-github-actions/auth@v0'
+      #   uses: 'google-github-actions/auth@v2'
       #   with:
       #     credentials_json: '${{ secrets.GCP_CREDENTIALS }}'
 
@@ -69,7 +69,7 @@ jobs:
           gcloud auth print-access-token | docker login -u oauth2accesstoken --password-stdin https://$GAR_LOCATION-docker.pkg.dev
       # Get the GKE credentials so we can deploy to the cluster
       - name: Set up GKE credentials
-        uses: google-github-actions/get-gke-credentials@v0
+        uses: google-github-actions/get-gke-credentials@v2
         with:
           cluster_name: ${{ env.GKE_CLUSTER }}
           location: ${{ env.GKE_ZONE }}
