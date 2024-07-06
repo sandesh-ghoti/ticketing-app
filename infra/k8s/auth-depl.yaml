@@ -17,7 +17,7 @@ spec:
           image: us-central1-docker.pkg.dev/long-stack-426216-q2/tickets-repo/auth
           resources:
             limits:
-              memory: "300Mi"
+              memory: "400Mi"
               cpu: "200m"
           env:
             - name: MONGO_URI

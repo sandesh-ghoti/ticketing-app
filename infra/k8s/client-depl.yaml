@@ -17,8 +17,8 @@ spec:
           image: us-central1-docker.pkg.dev/long-stack-426216-q2/tickets-repo/client
           resources:
             limits:
-              memory: "500Mi"
-              cpu: "500m"
+              memory: "400Mi"
+              cpu: "200m"
 ---
 apiVersion: v1
 kind: Service
