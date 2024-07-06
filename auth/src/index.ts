@@ -4,6 +4,7 @@ import dotenv from "dotenv"; //this only need in case of .env file means without
 dotenv.config();
 
 const start = async () => {
+  console.log("starting auth service..")
   if (!process.env.JWT_KEY) {
     throw new Error("JWT_KEY must be defined");
   }
