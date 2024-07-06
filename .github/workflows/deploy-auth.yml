@@ -20,7 +20,6 @@ on:
       - "auth/**"
 
 env:
-  GCLOUD_PROJECT: ${{ secrets.GKE_PROJECT }}
   PROJECT_ID: ${{ secrets.GKE_PROJECT }}
   GAR_LOCATION: ${{ secrets.GAR_LOCATION }} # TODO: update region of the Artifact Registry
   GKE_CLUSTER: ${{ secrets.GKE_CLUSTER }} # TODO: update to cluster name
@@ -68,11 +67,16 @@ jobs:
       - name: Docker configuration
         run: |-
           gcloud auth print-access-token | docker login -u oauth2accesstoken --password-stdin https://$GAR_LOCATION-docker.pkg.dev
+      
+      - name: Enable detailed logging
+        run: |
+          set -x
+    
       # Get the GKE credentials so we can deploy to the cluster
       - name: Set up GKE credentials
         uses: google-github-actions/get-gke-credentials@v2
         with:
-          cluster_name: ${{ env.GKE_CLUSTER }}
+          cluster_name: projects/${{ env.PROJECT_ID }}/locations/${{ env.GKE_ZONE }}/clusters/${{ env.GKE_CLUSTER }}
           location: ${{ env.GKE_ZONE }}
           project_id: ${{ env.PROJECT_ID }}
 
