@@ -11,7 +11,6 @@ const start = async () => {
     throw new Error("MONGO_URI must be defined");
   }
   try {
-    console.log("Starting up .....");
     if (!process.env.JWT_KEY) {
       throw new Error("JWT_KEY must be defined");
     }
