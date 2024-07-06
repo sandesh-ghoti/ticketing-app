@@ -1,13 +1,11 @@
 import { Request, Response, NextFunction } from "express";
 import jwt from "jsonwebtoken";
-import { SessionPayload, UserPayload } from "../types/types";
-type userPayloadType = Extract<Request, UserPayload>;
-
+import { UserPayload } from "../types/types";
+import "cookie-session";
 declare global {
   namespace Express {
     interface Request {
       user?: UserPayload;
-      session?: SessionPayload;
     }
   }
 }
@@ -34,7 +32,7 @@ export const currentUser = (
     const payload = jwt.verify(
       req.session.jwt,
       process.env.JWT_KEY!
-    ) as userPayloadType;
+    ) as UserPayload;
     req.user = payload;
     next();
   } catch (error) {

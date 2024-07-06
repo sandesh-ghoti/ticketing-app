@@ -1,4 +1,5 @@
 import mongoose from "mongoose";
+import { Password } from "../utils/passwordEncryption";
 
 // Define the user schema
 //interface describes props required to create a user
@@ -19,20 +20,41 @@ interface UserDoc extends mongoose.Document {
   email: string;
   password: string;
 }
-const userSchema = new mongoose.Schema({
-  name: {
-    type: String,
-    required: true,
+const userSchema = new mongoose.Schema(
+  {
+    name: {
+      type: String,
+      required: true,
+    },
+    email: {
+      type: String,
+      required: true,
+      unique: true,
+    },
+    password: {
+      type: String,
+      required: true,
+    },
   },
-  email: {
-    type: String,
-    required: true,
-    unique: true,
-  },
-  password: {
-    type: String,
-    required: true,
-  },
+  {
+    //manipulate the JSON representation
+    toJSON: {
+      transform(doc, ret) {
+        ret.id = ret._id;
+        delete ret._id;
+        delete ret.password;
+        delete ret.__v;
+      },
+    },
+  }
+);
+
+userSchema.pre("save", async function (done) {
+  if (!this.isModified("password")) return done();
+
+  const hashed = await Password.toHash(this.get("password"));
+  this.set("password", hashed);
+  done();
 });
 
 userSchema.statics.build = (attrs: IUser) => {

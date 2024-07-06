@@ -3,7 +3,7 @@ import express from "express";
 const router = express.Router();
 
 router.post("/", (req, res) => {
-  req.session = undefined;
+  req.session = null;
   res.send({});
 });
 
