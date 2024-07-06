@@ -20,6 +20,7 @@ on:
       - "auth/**"
 
 env:
+  GCLOUD_PROJECT: ${{ secrets.GKE_PROJECT }}
   PROJECT_ID: ${{ secrets.GKE_PROJECT }}
   GAR_LOCATION: ${{ secrets.GAR_LOCATION }} # TODO: update region of the Artifact Registry
   GKE_CLUSTER: ${{ secrets.GKE_CLUSTER }} # TODO: update to cluster name
