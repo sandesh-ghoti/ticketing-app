@@ -7,7 +7,7 @@ import { currentUserRouter } from "./currentUser";
 const router = Router();
 
 router.get("/", (req, res) => {
-  return res.send("Hello World!");
+  return res.send("Hello!, Auth-srv is up!");
 });
 router.use("/signup", signupRouter);
 router.use("/signin", signinRouter);

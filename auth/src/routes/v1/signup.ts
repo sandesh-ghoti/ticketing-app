@@ -5,9 +5,6 @@ import { User } from "../../models/user";
 import { BadRequestError, validateRequest } from "tickets-commonutils";
 
 const router = express.Router();
-router.get("/", (req: Request, res: Response) => {
-  res.send("Hello from signup");
-});
 router.post(
   "/",
   [
@@ -20,7 +17,6 @@ router.post(
   ],
   validateRequest,
   async (req: Request, res: Response) => {
-    console.log("signup called");
     const { name, email, password } = req.body;
 
     const existingUser = await User.findOne({ email });
