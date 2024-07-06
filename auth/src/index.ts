@@ -8,6 +8,7 @@ import cookieSession from "cookie-session";
 import dotenv from "dotenv"; //this only need in case of .env file means without k8s depl
 dotenv.config();
 const app = express();
+app.set("trust proxy", true);
 app.use(json());
 app.use(
   cookieSession({

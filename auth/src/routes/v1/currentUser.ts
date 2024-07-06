@@ -3,7 +3,7 @@ import { currentUser } from "tickets-commonutils";
 
 const router = express.Router();
 
-router.get("/api/users/currentuser", currentUser, (req, res) => {
+router.get("/", currentUser, (req, res) => {
   res.send({ user: req.user || null });
 });
 
