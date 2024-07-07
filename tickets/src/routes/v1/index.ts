@@ -1,10 +1,9 @@
 import { Router } from "express";
-import { testRouter } from "./test";
+import { createRouter } from "./create";
+import { getRouter } from "./get";
 
 const router = Router();
 
-router.get("/", (req, res) => {
-  return res.send("Hello!, tickets-srv is up!");
-});
-router.use("/test", testRouter);
+router.use("/", createRouter);
+router.use("/", getRouter);
 export default router;
