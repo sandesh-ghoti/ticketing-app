@@ -15,6 +15,7 @@ spec:
       containers:
         - name: client
           image: us-central1-docker.pkg.dev/long-stack-426216-q2/tickets-repo/client
+          imagePullPolicy: Always
           resources:
             limits:
               memory: "400Mi"
