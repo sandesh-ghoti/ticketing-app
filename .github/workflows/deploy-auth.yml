@@ -50,8 +50,8 @@ jobs:
         uses: 'google-github-actions/auth@v2'
         with:
           token_format: 'access_token'
-          workload_identity_provider: 'projects/${{env.PROJECT_NUMBER}}/locations/global/workloadIdentityPools/ticketing-pool/providers/ticketing-provider'
-          service_account: '${{env.SERVICE_ACCOUNT}}'
+          workload_identity_provider: 'projects/${{ env.PROJECT_NUMBER }}/locations/global/workloadIdentityPools/tickets-pool/providers/github'
+          service_account: '${{ env.SERVICE_ACCOUNT }}'
 
       # Alternative option - authentication via credentials json
       # - id: 'auth'
