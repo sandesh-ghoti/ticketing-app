@@ -21,11 +21,13 @@ on:
 
 env:
   PROJECT_ID: ${{ secrets.GKE_PROJECT }}
-  GAR_LOCATION: ${{ secrets.GAR_LOCATION }} # TODO: update region of the Artifact Registry
-  GKE_CLUSTER: ${{ secrets.GKE_CLUSTER }} # TODO: update to cluster name
-  GKE_ZONE: ${{ secrets.GKE_ZONE }} # TODO: update to cluster zone
-  DEPLOYMENT_NAME: auth-depl # TODO: update to deployment name
-  REPOSITORY: ${{ secrets.GAR_NAME }} # TODO: update to Artifact Registry docker repository
+  PROJECT_NUMBER: ${{ secrets.GKE_PROJECT_NUMBER }}
+  GAR_LOCATION: ${{ secrets.GAR_LOCATION }} # region of the Artifact Registry
+  GKE_CLUSTER: ${{ secrets.GKE_CLUSTER }} # gke cluster name
+  GKE_ZONE: ${{ secrets.GKE_ZONE }} # gke cluster zone
+  SERVICE_ACCOUNT: ${{ secrets.GKE_SERVICE_ACCOUNT }}
+  DEPLOYMENT_NAME: auth-depl # deployment name
+  REPOSITORY: ${{ secrets.GAR_NAME }} #gcp Artifact Registry docker repository
   IMAGE: auth
 
 jobs:
@@ -43,13 +45,13 @@ jobs:
         uses: actions/checkout@v4
 
       # Configure Workload Identity Federation and generate an access token.
-      # - id: 'auth'
-      #   name: 'Authenticate to Google Cloud'
-      #   uses: 'google-github-actions/auth@v2'
-      #   with:
-      #     token_format: 'access_token'
-      #     workload_identity_provider: 'projects/123456789/locations/global/workloadIdentityPools/my-pool/providers/my-provider'
-      #     service_account: 'my-service-account@my-project.iam.gserviceaccount.com'
+      - id: 'auth'
+        name: 'Authenticate to Google Cloud'
+        uses: 'google-github-actions/auth@v2'
+        with:
+          token_format: 'access_token'
+          workload_identity_provider: 'projects/${{env.PROJECT_NUMBER}}/locations/global/workloadIdentityPools/ticketing-pool/providers/ticketing-provider'
+          service_account: '${{env.SERVICE_ACCOUNT}}'
 
       # Alternative option - authentication via credentials json
       # - id: 'auth'
@@ -58,15 +60,15 @@ jobs:
       #     credentials_json: '${{ secrets.GCP_CREDENTIALS }}'
 
       # Authenticate using the base64-encoded key
-      - name: Authenticate to Google Cloud
-        run: |
-          echo "${{ secrets.GKE_SA_KEY }}" | base64 --decode > "${{ github.workspace }}/gcloud-key.json"
-          gcloud auth activate-service-account --key-file="${{ github.workspace }}/gcloud-key.json"
-          gcloud config set project ${{ env.PROJECT_ID }}
+      # - name: Authenticate to Google Cloud
+      #   run: |
+      #     echo "${{ secrets.GKE_SA_KEY }}" | base64 --decode > "${{ github.workspace }}/gcloud-key.json"
+      #     gcloud auth activate-service-account --key-file="${{ github.workspace }}/gcloud-key.json"
+      #     gcloud config set project ${{ env.PROJECT_ID }}
 
       - name: Docker configuration
         run: |-
-          gcloud auth print-access-token | docker login -u oauth2accesstoken --password-stdin https://$GAR_LOCATION-docker.pkg.dev
+          echo ${{steps.auth.outputs.access_token}} | docker login -u oauth2accesstoken --password-stdin https://$GAR_LOCATION-docker.pkg.dev
       
       - name: Enable detailed logging
         run: |
@@ -76,9 +78,8 @@ jobs:
       - name: Set up GKE credentials
         uses: google-github-actions/get-gke-credentials@v2
         with:
-          cluster_name: projects/${{ env.PROJECT_ID }}/locations/${{ env.GKE_ZONE }}/clusters/${{ env.GKE_CLUSTER }}
+          cluster_name: ${{ env.GKE_CLUSTER }}
           location: ${{ env.GKE_ZONE }}
-          project_id: ${{ env.PROJECT_ID }}
 
       # Build the Docker image
       - name: Build
