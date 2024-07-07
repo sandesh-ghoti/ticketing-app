@@ -1,0 +1,51 @@
+name: deploy-manifests
+
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - "infra/**"
+
+env:
+  PROJECT_ID: ${{ secrets.GKE_PROJECT }}
+  PROJECT_NUMBER: ${{ secrets.GKE_PROJECT_NUMBER }}
+  GAR_LOCATION: ${{ secrets.GAR_LOCATION }} # region of the Artifact Registry
+  GKE_CLUSTER: ${{ secrets.GKE_CLUSTER }} # gke cluster name
+  GKE_ZONE: ${{ secrets.GKE_ZONE }} # gke cluster zone
+  SERVICE_ACCOUNT: ${{ secrets.GKE_SERVICE_ACCOUNT }}
+  REPOSITORY: ${{ secrets.GAR_NAME }} #gcp Artifact Registry docker repository
+
+jobs:
+  setup-deploy:
+    name: Setup, Deploy
+    runs-on: ubuntu-latest
+    environment: production
+
+    permissions:
+      contents: "read"
+      id-token: "write"
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      # Configure Workload Identity Federation and generate an access token.
+      - id: "auth"
+        name: "Authenticate to Google Cloud"
+        uses: "google-github-actions/auth@v2"
+        with:
+          token_format: "access_token"
+          workload_identity_provider: "projects/${{ env.PROJECT_NUMBER }}/locations/global/workloadIdentityPools/tickets-pool/providers/github"
+          service_account: "${{ env.SERVICE_ACCOUNT }}"
+
+      # Get the GKE credentials so we can deploy to the cluster
+      - name: Set up GKE credentials
+        uses: google-github-actions/get-gke-credentials@v2
+        with:
+          cluster_name: ${{ env.GKE_CLUSTER }}
+          location: ${{ env.GKE_ZONE }}
+
+      # Deploy the Docker image to the GKE cluster
+      - name: Deploy all depl
+        run: kubectl apply -f infra/k8s
