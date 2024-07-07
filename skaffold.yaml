@@ -1,27 +1,52 @@
 apiVersion: skaffold/v4beta11
 kind: Config
-manifests:
-  rawYaml:
-    - ./infra/k8s/*
-build:
-  # local:
-  #   push: false
-  googleCloudBuild:
-    projectId: long-stack-426216-q2
-  artifacts:
-    - image: us-central1-docker.pkg.dev/long-stack-426216-q2/tickets-repo/auth
-      context: auth
-      docker:
-        dockerfile: Dockerfile
-      sync:
-        manual:
-          - src: "src/**/*.ts"
-            dest: .
-    - image: us-central1-docker.pkg.dev/long-stack-426216-q2/tickets-repo/client
-      context: client
-      docker:
-        dockerfile: Dockerfile
-      sync:
-        manual:
-          - src: "src/**/*.ts"
-            dest: .
+profiles:
+  - name: local
+    manifests:
+      rawYaml:
+        - ./infra/k8s/dev/*
+    build:
+      local:
+        push: false
+      artifacts:
+        - image: auth
+          context: auth
+          docker:
+            dockerfile: Dockerfile
+          sync:
+            manual:
+              - src: "src/**/*.ts"
+                dest: .
+        - image: client
+          context: client
+          docker:
+            dockerfile: Dockerfile
+          sync:
+            manual:
+              - src: "src/**/*.ts"
+                dest: .
+
+  - name: prod
+    manifests:
+      rawYaml:
+        - ./infra/k8s/prod/*
+    build:
+      googleCloudBuild:
+        projectId: long-stack-426216-q2
+      artifacts:
+        - image: us-central1-docker.pkg.dev/long-stack-426216-q2/tickets-repo/auth
+          context: auth
+          docker:
+            dockerfile: Dockerfile
+          sync:
+            manual:
+              - src: "src/**/*.ts"
+                dest: .
+        - image: us-central1-docker.pkg.dev/long-stack-426216-q2/tickets-repo/client
+          context: client
+          docker:
+            dockerfile: Dockerfile
+          sync:
+            manual:
+              - src: "src/**/*.ts"
+                dest: .
