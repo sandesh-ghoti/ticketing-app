@@ -65,4 +65,4 @@ jobs:
       # Deploy the Docker image to the GKE cluster
       - name: Deploy
         run: |-
-          kubectl rollout restart deployment client-depl
+          kubectl rollout restart deployment client
