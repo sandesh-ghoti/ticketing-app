@@ -19,6 +19,13 @@ spec:
                 name: auth-srv
                 port:
                   number: 3000
+          - pathType: ImplementationSpecific
+            path: /api/tickets/v1/?(.*)
+            backend:
+              service:
+                name: ticket-srv
+                port:
+                  number: 3000
           - path: /?(.*)
             pathType: ImplementationSpecific
             backend:
