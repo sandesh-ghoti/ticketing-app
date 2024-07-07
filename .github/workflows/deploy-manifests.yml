@@ -5,7 +5,7 @@ on:
     branches:
       - main
     paths:
-      - "infra/**"
+      - "infra/k8s/prod**"
 
 env:
   PROJECT_ID: ${{ secrets.GKE_PROJECT }}
@@ -48,4 +48,4 @@ jobs:
 
       # Deploy the Docker image to the GKE cluster
       - name: Deploy all depl
-        run: kubectl apply -f infra/k8s
+        run: kubectl apply -f infra/k8s/prod
