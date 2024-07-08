@@ -1,7 +1,7 @@
 import express from "express";
 import { json } from "body-parser";
 import "express-async-errors";
-import { errorHandler, NotFoundError } from "tickets-commonutils";
+import { currentUser, errorHandler, NotFoundError } from "tickets-commonutils";
 import cookieSession from "cookie-session";
 import routes from "./routes";
 
@@ -16,6 +16,7 @@ app.use(
   })
 );
 
+app.use(currentUser);
 app.use("/api/users", routes);
 
 app.all("*", async (req, res) => {

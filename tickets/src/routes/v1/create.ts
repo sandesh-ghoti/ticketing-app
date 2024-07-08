@@ -7,7 +7,6 @@ const router = express.Router();
 
 router.post(
   "/",
-  currentUser,
   requireAuth,
   [
     body("title").not().isEmpty().withMessage("title is required"),

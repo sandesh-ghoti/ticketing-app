@@ -13,7 +13,7 @@ interface TicketModel extends mongoose.Model<TicketsDoc> {
 }
 
 //interface describes props that a Ticket Document has
-interface TicketsDoc extends mongoose.Document {
+export interface TicketsDoc extends mongoose.Document {
   title: string;
   userId: string;
   price: number;
