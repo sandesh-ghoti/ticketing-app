@@ -1,7 +1,9 @@
 import express, { Request, Response } from "express";
-import { currentUser, requireAuth, validateRequest } from "tickets-commonutils";
+import { requireAuth, validateRequest } from "tickets-commonutils";
 import { body } from "express-validator";
 import { Ticket } from "../../models/ticket";
+import { natsWrapper } from "../../nats-wrapper";
+import { TicketCreatedPublisher } from "../../events/publishers/ticket-created-publisher";
 
 const router = express.Router();
 
@@ -22,7 +24,12 @@ router.post(
       userId: req.user!.id,
     });
     await ticket.save();
-
+    const ticketPub = new TicketCreatedPublisher(natsWrapper.js);
+    await ticketPub.publish({
+      id: ticket.id,
+      title: ticket.title,
+      price: ticket.price,
+    });
     res.status(201).send(ticket);
   }
 );

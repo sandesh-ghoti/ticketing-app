@@ -5,7 +5,7 @@ import {
   JsMsg,
   NatsConnection,
 } from "nats";
-import { Event, STREAM_NAME } from "./shared";
+import { Event } from "./shared";
 
 /**
  * Abstract class for subscribers to NATS events.
@@ -28,11 +28,6 @@ export abstract class Subscriber<T extends Event> {
   abstract consumerName: string;
 
   /**
-   * The JetStream client.
-   */
-  private js: JetStreamClient;
-
-  /**
    * The NATS connection.
    */
   private nc: NatsConnection;
@@ -40,7 +35,7 @@ export abstract class Subscriber<T extends Event> {
   /**
    * The name of the stream to consume from.
    */
-  protected streamName: string = STREAM_NAME;
+  abstract streamName: string;
 
   /**
    * The maximum time in nanoseconds to wait for an acknowledgement.
@@ -69,10 +64,8 @@ export abstract class Subscriber<T extends Event> {
    * Constructor for the Subscriber class.
    *
    * @param nc The NATS connection.
-   * @param js The JetStream client.
    */
-  constructor(nc: NatsConnection, js: JetStreamClient) {
-    this.js = js;
+  constructor(nc: NatsConnection) {
     this.nc = nc;
     this.setupConsumer().catch((err) => {
       console.error(`Error setting up consumer: ${err.message}`);
@@ -95,7 +88,9 @@ export abstract class Subscriber<T extends Event> {
       filter_subject: this.subject,
       ack_wait: this.ackWait,
     });
-    const c = await this.js.consumers.get(this.streamName, this.consumerName);
+    const c = await this.nc
+      .jetstream()
+      .consumers.get(this.streamName, this.consumerName);
     this.consumer = c;
   }
 

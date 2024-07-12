@@ -1,17 +1,36 @@
 import mongoose from "mongoose";
 import { app } from "./app";
+import { natsWrapper } from "./nats-wrapper";
 
 const start = async () => {
   console.log("Starting up tickets...");
+  if (!process.env.JWT_KEY) {
+    throw new Error("JWT_KEY must be defined");
+  }
+  if (!process.env.MONGO_URI) {
+    throw new Error("MONGO_URI must be defined");
+  }
+  if (!process.env.STREAM_NAME) {
+    throw new Error("STREAM_NAME must be defined");
+  }
+  if (!process.env.NATS_URL) {
+    throw new Error("NATS_URL must be defined");
+  }
+
   try {
-    if (!process.env.JWT_KEY) {
-      throw new Error("JWT_KEY must be defined");
-    }
-    if (!process.env.MONGO_URI) {
-      throw new Error("MONGO_URI must be defined");
-    }
     console.log("Connecting to mongoDB", process.env.MONGO_URI!);
     await mongoose.connect(process.env.MONGO_URI!);
+
+    // connect to nats
+    await natsWrapper.connect(
+      process.env.STREAM_NAME!,
+      ["ticket.created"],
+      process.env.NATS_URL!
+    );
+    console.log("Connected to Nats");
+
+    // process.on("SIGINT", async () => await natsWrapper.nc.close()); //Interrupt
+    // process.on("SIGTERM", async () => await natsWrapper.nc.close()); //Terminate
   } catch (err) {
     console.log(err);
     process.exit(1);

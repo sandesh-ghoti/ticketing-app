@@ -43,8 +43,7 @@ export abstract class Publisher<T extends Event> {
     return new Promise(async (resolve, reject) => {
       try {
         const msg = await this.js.publish(this.subject, JSON.stringify(data));
-        console.log("Event published to subject", this.subject);
-        console.log("Message seq: ", msg.seq);
+        console.log("Published", this.subject);
         resolve();
       } catch (error) {
         return reject(error);
