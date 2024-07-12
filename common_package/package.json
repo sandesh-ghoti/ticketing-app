@@ -23,6 +23,7 @@
     "express": "^4.19.2",
     "express-validator": "^7.1.0",
     "jsonwebtoken": "^9.0.2",
+    "nats": "^2.28.0",
     "typescript": "^5.4.5"
   }
 }

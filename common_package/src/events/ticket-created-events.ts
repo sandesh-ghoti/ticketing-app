@@ -8,12 +8,3 @@ export interface TicketCreatedEvent {
     price: number;
   };
 }
-
-export interface OrderCreatedEvent {
-  subject: Subjects.ORDER_CREATED;
-  data: {
-    id: string;
-    title: string;
-    price: number;
-  };
-}
