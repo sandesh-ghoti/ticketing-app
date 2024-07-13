@@ -6,6 +6,8 @@ declare global {
   var signin: () => string[];
 }
 
+jest.mock("../nats-wrapper");
+
 let mongo: any;
 //THIS will starts before Testing ...
 
@@ -20,6 +22,8 @@ beforeAll(async () => {
 
 //THIS will starts before each Test ...
 beforeEach(async () => {
+  jest.clearAllMocks();
+
   //We will reach into this MongoDB DB & delete / reset all the data inside there
   const collections = await mongoose.connection.db.collections();
   for (let collection of collections) {

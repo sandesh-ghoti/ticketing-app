@@ -1,11 +1,12 @@
-import { mongo } from "mongoose";
+import mongoose from "mongoose";
 import { app } from "../../app";
 import request from "supertest";
 import { createTestTicket } from "./get.test";
 import { Ticket, TicketsDoc } from "../../models/ticket";
+import { natsWrapper } from "../../nats-wrapper";
 
 it("raise unautherized error if not logged in", async () => {
-  const id = new mongo.ObjectId().toHexString();
+  const id = new mongoose.Types.ObjectId().toHexString();
   await request(app)
     .put(`/api/tickets/v1/${id}`)
     .send({
@@ -15,7 +16,7 @@ it("raise unautherized error if not logged in", async () => {
     .expect(401);
 });
 it("raise not found error if ticket not found", async () => {
-  const id = new mongo.ObjectId().toHexString();
+  const id = new mongoose.Types.ObjectId().toHexString();
   await request(app)
     .put(`/api/tickets/v1/${id}`)
     .set("Cookie", global.signin())
@@ -100,5 +101,44 @@ it("reject updates if the ticket is reserved", async () => {
       title: "test",
       price: 10,
     })
+    .expect(400);
+});
+it("should publish a ticket updated event", async () => {
+  const session = global.signin();
+  const res = await request(app)
+    .post("/api/tickets/v1")
+    .set("Cookie", session)
+    .send({
+      title: "Concert",
+      price: 100,
+    })
+    .expect(201);
+
+  await request(app)
+    .put(`/api/tickets/v1/${res.body.id}`)
+    .set("Cookie", session)
+    .send({
+      title: "Concert-1",
+      price: 110,
+    })
+    .expect(200);
+
+  expect(natsWrapper.nc.jetstream().publish).toHaveBeenCalled();
+});
+it("rejects updates if the ticket is reserved", async () => {
+  const cookie = global.signin();
+  const response = await request(app)
+    .post("/api/tickets/v1")
+    .set("Cookie", cookie)
+    .send({ title: "test", price: 20 });
+  //Try to update:
+  const ticket = await Ticket.findById(response.body.id);
+  ticket?.set({ orderId: new mongoose.Types.ObjectId().toHexString() });
+  await ticket?.save();
+
+  await request(app)
+    .put(`/api/tickets/v1/${response.body.id}`)
+    .set("Cookie", cookie)
+    .send({ title: "test 123", price: 99 })
     .expect(400);
 });
