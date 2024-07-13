@@ -1,11 +1,20 @@
-import { connect, NatsConnection } from "nats";
+import { NatsConnection } from "nats";
 import { TicketCreatedSubscriber } from "./events/ticket-created-sub";
-import { createOrUpdateTicketingStream } from "./events/shared";
+import {
+  createOrUpdateTicketingStream,
+  STREAM_NAME,
+  Subjects,
+} from "./events/shared";
+import { natsWrapper } from "./nats-wrapper";
 console.clear();
 let nc: NatsConnection;
 async function ListenerMod() {
-  nc = await connect({ servers: "nats://localhost:4222" });
-  const js = await createOrUpdateTicketingStream(nc);
-  await new TicketCreatedSubscriber(nc, js).consume();
+  await natsWrapper.connect(
+    STREAM_NAME,
+    Object.values(Subjects),
+    "nats://localhost:4222"
+  );
+  await createOrUpdateTicketingStream(natsWrapper.nc);
+  await new TicketCreatedSubscriber(natsWrapper.nc).consume();
 }
 ListenerMod();

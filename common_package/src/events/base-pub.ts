@@ -45,7 +45,10 @@ export abstract class Publisher<T extends Event> {
         const msg = await this.nc
           .jetstream()
           .publish(this.subject, JSON.stringify(data));
-        console.log("Published with the subject:", this.subject);
+        console.log(
+          `Message seq:${msg.seq} Published with the subject:`,
+          this.subject
+        );
         resolve();
       } catch (error) {
         return reject(error);

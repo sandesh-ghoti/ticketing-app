@@ -1,10 +1,4 @@
-import {
-  AckPolicy,
-  Consumer,
-  JetStreamClient,
-  JsMsg,
-  NatsConnection,
-} from "nats";
+import { AckPolicy, Consumer, JsMsg, NatsConnection } from "nats";
 import { Event, STREAM_NAME } from "./shared";
 
 /**
@@ -26,11 +20,6 @@ export abstract class Subscriber<T extends Event> {
    * The name of the consumer.
    */
   abstract consumerName: string;
-
-  /**
-   * The JetStream client.
-   */
-  private js: JetStreamClient;
 
   /**
    * The NATS connection.
@@ -69,10 +58,8 @@ export abstract class Subscriber<T extends Event> {
    * Constructor for the Subscriber class.
    *
    * @param nc The NATS connection.
-   * @param js The JetStream client.
    */
-  constructor(nc: NatsConnection, js: JetStreamClient) {
-    this.js = js;
+  constructor(nc: NatsConnection) {
     this.nc = nc;
     this.setupConsumer().catch((err) => {
       console.error(`Error setting up consumer: ${err.message}`);
@@ -95,7 +82,9 @@ export abstract class Subscriber<T extends Event> {
       filter_subject: this.subject,
       ack_wait: this.ackWait,
     });
-    const c = await this.js.consumers.get(this.streamName, this.consumerName);
+    const c = await this.nc
+      .jetstream()
+      .consumers.get(this.streamName, this.consumerName);
     this.consumer = c;
   }
 

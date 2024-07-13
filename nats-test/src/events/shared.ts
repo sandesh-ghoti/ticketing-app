@@ -1,10 +1,11 @@
-import { JetStreamClient, NatsConnection, RetentionPolicy } from "nats";
+import { NatsConnection, RetentionPolicy } from "nats";
 
 /**
  * Enum of all subjects used in the ticketing system.
  */
 export enum Subjects {
   TICKET_CREATED = "ticket.created",
+  TICKET_UPDATED = "ticket.updated",
   ORDER_CREATED = "order.created",
   PAYMENT_CREATED = "payment.created",
 }
@@ -28,10 +29,7 @@ export const STREAM_NAME = "Ticketing";
  * @param nc The NATS connection.
  * @returns The JetStream client.
  */
-export async function createOrUpdateTicketingStream(
-  nc: NatsConnection
-): Promise<JetStreamClient> {
-  const js = nc.jetstream();
+export async function createOrUpdateTicketingStream(nc: NatsConnection) {
   const jsm = await nc.jetstreamManager();
 
   // check for old stream and updated
@@ -41,7 +39,6 @@ export async function createOrUpdateTicketingStream(
     if (stream) {
       stream.config.subjects = Object.values(Subjects);
       await jsm.streams.update(STREAM_NAME, stream.config);
-      return js;
     }
   }
   // create new stream
@@ -50,5 +47,4 @@ export async function createOrUpdateTicketingStream(
     retention: RetentionPolicy.Interest,
     subjects: Object.values(Subjects),
   });
-  return js;
 }

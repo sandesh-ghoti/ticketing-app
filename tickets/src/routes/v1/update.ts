@@ -39,7 +39,8 @@ router.put(
       price: req.body.price,
     });
     await ticket.save();
-    await new TicketUpdatedPublisher(natsWrapper.nc).publish({
+    const ticketUpdatedPublisher = new TicketUpdatedPublisher(natsWrapper.nc);
+    await ticketUpdatedPublisher.publish({
       id: ticket.id,
       price: ticket.price,
       title: ticket.title,

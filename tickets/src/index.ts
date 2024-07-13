@@ -1,6 +1,7 @@
 import mongoose from "mongoose";
 import { app } from "./app";
 import { natsWrapper } from "./nats-wrapper";
+import { Subjects } from "tickets-commonutils";
 
 const start = async () => {
   console.log("Starting up tickets...");
@@ -24,7 +25,7 @@ const start = async () => {
     // connect to nats
     await natsWrapper.connect(
       process.env.STREAM_NAME!,
-      ["ticket.created"],
+      Object.values(Subjects),
       process.env.NATS_URL!
     );
     console.log("Connected to Nats");

@@ -4,7 +4,8 @@
   "main": "index.js",
   "scripts": {
     "subscriber": "ts-node-dev --rs --notify false ./src/subscriber.ts",
-    "publisher": "ts-node-dev --rs --notify false ./src/publisher.ts"
+    "publisher": "ts-node-dev --rs --notify false ./src/publisher.ts",
+    "ticket-update-subscriber": "ts-node-dev --rs --notify false ./src/ticket-update-subscriber.ts"
   },
   "author": "",
   "license": "ISC",
