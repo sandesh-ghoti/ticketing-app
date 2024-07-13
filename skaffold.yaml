@@ -25,6 +25,14 @@ profiles:
             manual:
               - src: "src/**/*.ts"
                 dest: .
+        - image: order
+          context: ./orders
+          docker:
+            dockerfile: Dockerfile
+          sync:
+            manual:
+              - src: "src/**/*.ts"
+                dest: .
         - image: client
           context: client
           docker:

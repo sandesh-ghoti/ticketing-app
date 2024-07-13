@@ -1,0 +1,46 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: order-depl
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: order
+  template:
+    metadata:
+      labels:
+        app: order
+    spec:
+      containers:
+        - name: order
+          image: order
+          resources:
+            limits:
+              memory: "400Mi"
+              cpu: "300m"
+          env:
+            - name: MONGO_URI
+              value: "mongodb://order-mongo-srv:27017/order"
+            - name: NATS_URL
+              value: "http://nats-srv:4222"
+            - name: STREAM_NAME
+              value: "Ticketing"
+            - name: JWT_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: jwt-secret
+                  key: JWT_KEY
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: order-srv
+spec:
+  selector:
+    app: order
+  ports:
+    - name: order
+      protocol: TCP
+      port: 3000
+      targetPort: 3000
