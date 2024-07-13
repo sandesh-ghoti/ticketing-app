@@ -1,4 +1,4 @@
-import { JetStreamClient } from "nats";
+import { NatsConnection } from "nats";
 import { Event } from "./shared";
 
 /**
@@ -17,17 +17,17 @@ export abstract class Publisher<T extends Event> {
   abstract subject: T["subject"];
 
   /**
-   * The JetStream client.
+   * The Nats client.
    */
-  private js: JetStreamClient;
+  private nc: NatsConnection;
 
   /**
    * Constructor for the Publisher class.
    *
-   * @param js The JetStream client.
+   * @param nc The Nats client.
    */
-  constructor(js: JetStreamClient) {
-    this.js = js;
+  constructor(nc: NatsConnection) {
+    this.nc = nc;
   }
 
   /**
@@ -42,8 +42,10 @@ export abstract class Publisher<T extends Event> {
   publish(data: T["data"]): Promise<void> {
     return new Promise(async (resolve, reject) => {
       try {
-        const msg = await this.js.publish(this.subject, JSON.stringify(data));
-        console.log("Published", this.subject);
+        const msg = await this.nc
+          .jetstream()
+          .publish(this.subject, JSON.stringify(data));
+        console.log("Published with the subject:", this.subject);
         resolve();
       } catch (error) {
         return reject(error);

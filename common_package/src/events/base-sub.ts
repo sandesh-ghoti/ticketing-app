@@ -1,10 +1,4 @@
-import {
-  AckPolicy,
-  Consumer,
-  JetStreamClient,
-  JsMsg,
-  NatsConnection,
-} from "nats";
+import { AckPolicy, Consumer, JsMsg, NatsConnection } from "nats";
 import { Event } from "./shared";
 
 /**

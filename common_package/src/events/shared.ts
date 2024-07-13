@@ -1,5 +1,3 @@
-import { JetStreamClient, NatsConnection, RetentionPolicy } from "nats";
-
 /**
  * Enum of all subjects used in the ticketing system.
  */

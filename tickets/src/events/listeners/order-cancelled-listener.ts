@@ -21,7 +21,7 @@ export class OrderCancelledListener extends Subscriber<OrderCancelledEvent> {
     await ticket.save();
     //RQ: here we are publishing an Event from inside of our listener !
     //we need to publish all updates to conserve versioning
-    await new TicketUpdatedPublisher(natsWrapper.js).publish({
+    await new TicketUpdatedPublisher(natsWrapper.nc).publish({
       id: ticket.id,
       price: ticket.price,
       title: ticket.title,

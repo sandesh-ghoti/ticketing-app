@@ -8,6 +8,8 @@ import {
 } from "tickets-commonutils";
 import { body } from "express-validator";
 import { Ticket } from "../../models/ticket";
+import { TicketUpdatedPublisher } from "../../events/publishers/ticket-updated-publisher";
+import { natsWrapper } from "../../nats-wrapper";
 
 const router = express.Router();
 
@@ -37,6 +39,14 @@ router.put(
       price: req.body.price,
     });
     await ticket.save();
+    await new TicketUpdatedPublisher(natsWrapper.nc).publish({
+      id: ticket.id,
+      price: ticket.price,
+      title: ticket.title,
+      userId: ticket.userId,
+      orderId: ticket.orderId,
+      version: ticket.version,
+    });
     res.send(ticket);
   }
 );
