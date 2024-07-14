@@ -1,4 +1,4 @@
-import { OrderCancelledEvent, OrderStatus } from "tickets-commonutils";
+import { OrderCancelledEvent } from "tickets-commonutils";
 import { Ticket } from "../../../models/ticket";
 import { natsWrapper } from "../../../nats-wrapper";
 import mongoose from "mongoose";

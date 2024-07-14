@@ -10,7 +10,7 @@ import { Order } from "../../models/order";
 
 export class PaymentCompletedListener extends Subscriber<PaymentCreatedEvent> {
   readonly subject = Subjects.PAYMENT_CREATED;
-  consumerName: string = CONSUMER_NAME;
+  consumerName = CONSUMER_NAME + this.subject.split(".").join("_");
   streamName: string = process.env.STREAM_NAME!;
   async onMessage(data: PaymentCreatedEvent["data"], msg: JsMsg) {
     console.log("PaymentCreatedEvent!", data);

@@ -7,10 +7,10 @@ import { natsWrapper } from "../../nats-wrapper";
 
 export class OrderCreatedListener extends Subscriber<OrderCreatedEvent> {
   readonly subject = Subjects.ORDER_CREATED;
-  consumerName = CONSUMER_NAME;
+  consumerName = CONSUMER_NAME + this.subject.split(".").join("_");
   streamName: string = process.env.STREAM_NAME!;
   async onMessage(data: OrderCreatedEvent["data"], msg: JsMsg) {
-    //Find the ticket that the order is reserving
+    console.log("OrderCreatedEvent!", data);
     const ticket = await Ticket.findById(data.ticket.id);
     //If no ticket, throw an error
     if (!ticket) {

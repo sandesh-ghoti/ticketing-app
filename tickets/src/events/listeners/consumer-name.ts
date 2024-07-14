@@ -1,1 +1,1 @@
-export const CONSUMER_NAME = "tickets-service";
+export const CONSUMER_NAME = "tickets_srv_";

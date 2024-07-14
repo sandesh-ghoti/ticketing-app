@@ -5,7 +5,7 @@ import { Ticket } from "../../models/ticket";
 
 export class TicketCreatedListener extends Subscriber<TicketCreatedEvent> {
   readonly subject = Subjects.TICKET_CREATED;
-  consumerName: string = CONSUMER_NAME;
+  consumerName = CONSUMER_NAME + this.subject.split(".").join("_");
   streamName: string = process.env.STREAM_NAME!;
   async onMessage(data: TicketCreatedEvent["data"], msg: JsMsg) {
     console.log("TicketCreatedListener!", data);
@@ -13,6 +13,7 @@ export class TicketCreatedListener extends Subscriber<TicketCreatedEvent> {
 
     const ticket = Ticket.build({ id, title, price });
     await ticket.save();
+
     msg.ack();
   }
 }

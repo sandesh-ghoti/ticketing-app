@@ -56,10 +56,8 @@ const orderSchema = new mongoose.Schema(
 
 orderSchema.set("versionKey", "version");
 orderSchema.pre("save", function (next) {
-  if (this.isModified()) {
-    this.increment();
-    next();
-  }
+  this.increment();
+  next();
 });
 orderSchema.statics.build = (attrs: IOrder) => {
   return new Order(attrs); //standard method + .save()

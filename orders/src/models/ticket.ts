@@ -12,6 +12,10 @@ interface ITickets {
 //interface describes props that a Ticket Model has
 interface TicketModel extends mongoose.Model<TicketsDoc> {
   build(attrs: ITickets): TicketsDoc;
+  findByEvent(event: {
+    id: string;
+    version: number;
+  }): Promise<TicketsDoc | null>;
 }
 
 //interface describes props that a Ticket Document has
@@ -50,11 +54,19 @@ const ticketsSchema = new mongoose.Schema(
 
 ticketsSchema.set("versionKey", "version");
 ticketsSchema.pre("save", function (next) {
-  if (this.isModified()) {
-    this.increment();
-    next();
-  }
+  this.increment();
+  next();
 });
+ticketsSchema.statics.findByEvent = (event: {
+  id: string;
+  version: number;
+}) => {
+  return Ticket.findOne({
+    _id: event.id,
+    version: event.version - 1,
+  });
+};
+
 ticketsSchema.statics.build = (attrs: ITickets) => {
   return new Ticket({
     _id: attrs.id,
