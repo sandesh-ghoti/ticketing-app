@@ -49,6 +49,16 @@ profiles:
                 dest: .
               - src: "package.json"
                 dest: .
+        - image: payment
+          context: ./payment
+          docker:
+            dockerfile: Dockerfile
+          sync:
+            manual:
+              - src: "src/**/*.ts"
+                dest: .
+              - src: "package.json"
+                dest: .
         - image: client
           context: client
           docker:
