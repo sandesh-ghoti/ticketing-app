@@ -49,7 +49,12 @@ const ticketsSchema = new mongoose.Schema(
 );
 
 ticketsSchema.set("versionKey", "version");
-
+ticketsSchema.pre("save", function (next) {
+  if (this.isModified()) {
+    this.increment();
+    next();
+  }
+});
 ticketsSchema.statics.build = (attrs: ITickets) => {
   return new Ticket({
     _id: attrs.id,
