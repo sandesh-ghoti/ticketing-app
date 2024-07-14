@@ -1,0 +1,21 @@
+# Ignore test files and directories
+**/__tests__/
+**/*.test.js
+**/*.test.ts
+**/*.spec.js
+**/*.spec.ts
+tests/
+test/
+
+# Ignore other common unnecessary files
+node_modules/
+dist/
+coverage/
+.DS_Store
+.env
+.git
+.gitignore
+Dockerfile
+docker-compose.yml
+README.md
+*.log

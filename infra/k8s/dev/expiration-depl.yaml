@@ -1,0 +1,36 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: expiration-depl
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: expiration
+  template:
+    metadata:
+      labels:
+        app: expiration
+    spec:
+      containers:
+        - name: expiration
+          image: expiration
+          resources:
+            limits:
+              memory: "400Mi"
+              cpu: "300m"
+          env:
+            - name: MONGO_URI
+              value: "mongodb://expiration-mongo-srv:27017/expiration"
+            - name: NATS_URL
+              value: "http://nats-srv:4222"
+            - name: STREAM_NAME
+              value: "Ticketing"
+            - name: JWT_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: jwt-secret
+                  key: JWT_KEY
+            - name: REDIS_HOST
+              # value of the hostname for the register that we want to connect to
+              value: expiration-redis-srv
