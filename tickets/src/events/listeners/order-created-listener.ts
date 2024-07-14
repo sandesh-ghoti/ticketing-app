@@ -27,7 +27,7 @@ export class OrderCreatedListener extends Subscriber<OrderCreatedEvent> {
       price: ticket.price,
       title: ticket.title,
       userId: ticket.userId,
-      orderId: ticket.orderId,
+      orderId: data.id,
       version: ticket.version,
     });
     //Ack the message

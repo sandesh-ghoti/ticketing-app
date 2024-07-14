@@ -2,6 +2,8 @@ import mongoose from "mongoose";
 import { app } from "./app";
 import { natsWrapper } from "./nats-wrapper";
 import { Subjects } from "tickets-commonutils";
+import { OrderCreatedListener } from "./events/listeners/order-created-listener";
+import { OrderCancelledListener } from "./events/listeners/order-cancelled-listener";
 
 const start = async () => {
   console.log("Starting up tickets...");
@@ -28,10 +30,10 @@ const start = async () => {
       Object.values(Subjects),
       process.env.NATS_URL!
     );
-    console.log("Connected to Nats");
 
-    // process.on("SIGINT", async () => await natsWrapper.nc.close()); //Interrupt
-    // process.on("SIGTERM", async () => await natsWrapper.nc.close()); //Terminate
+    new OrderCreatedListener(natsWrapper.nc).consume();
+    new OrderCancelledListener(natsWrapper.nc).consume();
+    console.log("Connected to Nats");
   } catch (err) {
     console.log(err);
     process.exit(1);

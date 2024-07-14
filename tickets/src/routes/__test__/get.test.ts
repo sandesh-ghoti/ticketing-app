@@ -3,10 +3,10 @@ import { app } from "../../app";
 import { TicketsDoc } from "../../models/ticket";
 import mongoose from "mongoose";
 
-export const createTestTicket = () => {
+export const createTestTicket = (cookie = global.signin()) => {
   return request(app)
     .post("/api/tickets/v1")
-    .set("Cookie", global.signin())
+    .set("Cookie", cookie)
     .send({ title: "title 1", price: 20 });
 };
 
