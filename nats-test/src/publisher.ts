@@ -22,7 +22,7 @@ async function publishMod() {
       title: "concert",
       price: 30,
       userId: "1",
-      version: 0,
+      version: { id: "1", version: 0 },
     });
     await ticketUpdater.publish({
       id: "1",

@@ -5,7 +5,7 @@ import { TicketUpdatedEvent } from "./ticket-updated-events";
 
 export class TicketUpdatedSubscriber extends Subscriber<TicketUpdatedEvent> {
   readonly subject = Subjects.TICKET_UPDATED;
-  readonly consumerName = "ticket-updated-consumer";
+  readonly consumerName = "nats-test" + this.subject.split(".").join("");
   onMessage(data: TicketUpdatedEvent["data"], msg: JsMsg): void {
     console.log(
       this.consumerName,

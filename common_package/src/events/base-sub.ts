@@ -1,4 +1,10 @@
-import { AckPolicy, Consumer, JsMsg, NatsConnection } from "nats";
+import {
+  AckPolicy,
+  Consumer,
+  DeliverPolicy,
+  JsMsg,
+  NatsConnection,
+} from "nats";
 import { Event } from "./shared";
 
 /**
@@ -76,16 +82,31 @@ export abstract class Subscriber<T extends Event> {
     const jsm = await this.nc.jetstreamManager();
 
     // Add or update the consumer
+    const consumers = await jsm.consumers.list(this.streamName).next();
+    if (consumers.length > 0) {
+      for (const c of consumers) {
+        if (c.config.durable_name === this.consumerName) {
+          console.log(`Consumer ${this.consumerName} already exists`);
+          const c = await this.nc
+            .jetstream()
+            .consumers.get(this.streamName, this.consumerName);
+          this.consumer = c;
+          return;
+        }
+      }
+    }
     await jsm.consumers.add(this.streamName, {
       durable_name: this.consumerName,
       ack_policy: AckPolicy.Explicit,
       filter_subject: this.subject,
       ack_wait: this.ackWait,
+      deliver_policy: DeliverPolicy.All,
     });
     const c = await this.nc
       .jetstream()
       .consumers.get(this.streamName, this.consumerName);
     this.consumer = c;
+    return;
   }
 
   /**
@@ -122,10 +143,10 @@ export abstract class Subscriber<T extends Event> {
    */
   parseMessage(msg: JsMsg): T["data"] {
     try {
-      return msg.json();
+      return JSON.parse(msg.string());
     } catch (err: any) {
       console.error(`Error parsing message: ${err.message!}`);
-      return msg.string();
+      return msg.json();
     }
   }
 }
