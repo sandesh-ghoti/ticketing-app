@@ -25,9 +25,12 @@ export const natsWrapper = {
       },
       publish: jest.fn().mockResolvedValue({ seq: 1 }),
     }),
-    jetstreamManager: jest.fn().mockImplementation(() => ({
+    jetstreamManager: jest.fn().mockResolvedValue({
       consumers: {
         add: jest.fn().mockResolvedValue({}),
+        list: jest.fn().mockReturnValue({
+          next: jest.fn().mockResolvedValue([]),
+        }),
       },
       streams: {
         list: jest
@@ -36,6 +39,6 @@ export const natsWrapper = {
         add: jest.fn().mockResolvedValue({}),
         update: jest.fn().mockResolvedValue({}),
       },
-    })),
+    }),
   } as unknown as NatsConnection,
 };
