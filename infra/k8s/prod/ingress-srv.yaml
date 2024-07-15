@@ -9,7 +9,7 @@ metadata:
 spec:
   ingressClassName: nginx
   rules:
-    - host: ticketing.dev # change to your domain
+    - host: ticketing-test.dev
       http:
         paths:
           - pathType: ImplementationSpecific
@@ -17,6 +17,27 @@ spec:
             backend:
               service:
                 name: auth-srv
+                port:
+                  number: 3000
+          - pathType: ImplementationSpecific
+            path: /api/tickets/v1/?(.*)
+            backend:
+              service:
+                name: ticket-srv
+                port:
+                  number: 3000
+          - pathType: ImplementationSpecific
+            path: /api/orders/v1/?(.*)
+            backend:
+              service:
+                name: order-srv
+                port:
+                  number: 3000
+          - pathType: ImplementationSpecific
+            path: /api/payments/v1/?(.*)
+            backend:
+              service:
+                name: payment-srv
                 port:
                   number: 3000
           - path: /?(.*)
