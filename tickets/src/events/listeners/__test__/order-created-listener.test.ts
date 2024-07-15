@@ -40,7 +40,6 @@ it("update ticket as per order id", async () => {
 
 it("acks the message", async () => {
   const { listener, data, msg } = await setup();
-  console.log(data);
   await listener.onMessage(data, msg);
 
   expect(msg.ack).toHaveBeenCalled();

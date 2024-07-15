@@ -11,7 +11,6 @@ export class OrderCancelledListener extends Subscriber<OrderCancelledEvent> {
   streamName: string = process.env.STREAM_NAME!;
   async onMessage(data: OrderCancelledEvent["data"], msg: JsMsg) {
     console.log("OrderCancelledEvent!");
-    console.log("data", data);
     const ticket = await Ticket.findById(data.ticket.id);
 
     if (!ticket) {

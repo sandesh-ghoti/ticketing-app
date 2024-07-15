@@ -16,7 +16,7 @@ export class ExpirationCreatedListener extends Subscriber<ExpirationCompleteEven
   consumerName = CONSUMER_NAME + this.subject.split(".").join("_");
   streamName: string = process.env.STREAM_NAME!;
   async onMessage(data: ExpirationCompleteEvent["data"], msg: JsMsg) {
-    console.log("ExpirationCompleteEvent!", data);
+    console.log("ExpirationCompleteEvent!");
     const { orderId } = data;
     const order = await Order.findById(orderId).populate("ticket");
     if (!order) {
@@ -27,10 +27,7 @@ export class ExpirationCreatedListener extends Subscriber<ExpirationCompleteEven
     }
     order.set({ status: OrderStatus.Cancelled });
     await order.save();
-    console.log(
-      "is ticket still available?",
-      await Ticket.findById(order.ticket.id)
-    );
+
     await new OrderCancelledPublisher(natsWrapper.nc).publish({
       id: order.id,
       version: order.version,

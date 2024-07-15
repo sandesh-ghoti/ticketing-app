@@ -13,7 +13,7 @@ export class PaymentCompletedListener extends Subscriber<PaymentCreatedEvent> {
   consumerName = CONSUMER_NAME + this.subject.split(".").join("_");
   streamName: string = process.env.STREAM_NAME!;
   async onMessage(data: PaymentCreatedEvent["data"], msg: JsMsg) {
-    console.log("PaymentCreatedEvent!", data);
+    console.log("PaymentCreatedEvent!");
     const { orderId } = data;
     const order = await Order.findById(orderId);
     if (!order) {

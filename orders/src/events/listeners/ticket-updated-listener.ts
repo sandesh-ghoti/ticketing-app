@@ -13,7 +13,7 @@ export class TicketUpdatedListener extends Subscriber<TicketUpdatedEvent> {
   consumerName = CONSUMER_NAME + this.subject.split(".").join("_");
   streamName: string = process.env.STREAM_NAME!;
   async onMessage(data: TicketUpdatedEvent["data"], msg: JsMsg) {
-    console.log("TicketUpdatedEvent!", data);
+    console.log("TicketUpdatedEvent!");
     const { title, price } = data;
     const ticket = await Ticket.findByEvent(data);
     if (!ticket) {

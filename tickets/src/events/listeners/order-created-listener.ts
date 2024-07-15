@@ -10,7 +10,7 @@ export class OrderCreatedListener extends Subscriber<OrderCreatedEvent> {
   consumerName = CONSUMER_NAME + this.subject.split(".").join("_");
   streamName: string = process.env.STREAM_NAME!;
   async onMessage(data: OrderCreatedEvent["data"], msg: JsMsg) {
-    console.log("OrderCreatedEvent!", data);
+    console.log("OrderCreatedEvent!");
     const ticket = await Ticket.findById(data.ticket.id);
     //If no ticket, throw an error
     if (!ticket) {

@@ -8,7 +8,7 @@ export class OrderCreatedListener extends Subscriber<OrderCreatedEvent> {
   consumerName = CONSUMER_NAME + this.subject.split(".").join("_");
   streamName: string = process.env.STREAM_NAME!;
   async onMessage(data: OrderCreatedEvent["data"], msg: JsMsg) {
-    console.log("OrderCreatedEvent!", data);
+    console.log("OrderCreatedEvent!");
     const order = await Order.build({
       id: data.id,
       status: data.status,

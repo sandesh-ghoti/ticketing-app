@@ -7,9 +7,8 @@ export class OrderCreatedListener extends Subscriber<OrderCreatedEvent> {
   consumerName = CONSUMER_NAME + this.subject.split(".").join("_");
   streamName: string = process.env.STREAM_NAME!;
   async onMessage(data: OrderCreatedEvent["data"], msg: JsMsg) {
-    console.log("OrderCreatedEvent!", data);
+    console.log("OrderCreatedEvent!");
     const delay = new Date(data.expiresAt).getTime() - new Date().getTime();
-    console.log("wait for " + delay + "ms");
     await expirationQueue.add({ orderId: data.id }, { delay });
     msg.ack();
     //Ack the message

@@ -8,7 +8,7 @@ export class TicketCreatedListener extends Subscriber<TicketCreatedEvent> {
   consumerName = CONSUMER_NAME + this.subject.split(".").join("_");
   streamName: string = process.env.STREAM_NAME!;
   async onMessage(data: TicketCreatedEvent["data"], msg: JsMsg) {
-    console.log("TicketCreatedListener!", data);
+    console.log("TicketCreatedListener!");
     const { id, title, price } = data;
 
     const ticket = Ticket.build({ id, title, price });
