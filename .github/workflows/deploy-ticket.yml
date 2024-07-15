@@ -10,7 +10,7 @@
 #
 # For more support on how to run the workflow, please visit https://github.com/google-github-actions/setup-gcloud/tree/master/example-workflows/gke-kustomize
 
-name: deploy-tickets
+name: deploy-ticket
 
 on:
   push:
@@ -27,11 +27,11 @@ env:
   GKE_ZONE: ${{ secrets.GKE_ZONE }} # gke cluster zone
   SERVICE_ACCOUNT: ${{ secrets.GKE_SERVICE_ACCOUNT }}
   REPOSITORY: ${{ secrets.GAR_NAME }} #gcp Artifact Registry docker repository
-  IMAGE: tickets
+  IMAGE: ticket
 
 jobs:
   setup-build-publish-deploy:
-    name: Setup, Build, Publish, and Deploy
+    name: CICD ticket
     runs-on: ubuntu-latest
     environment: production
 
@@ -77,4 +77,4 @@ jobs:
       # Deploy the Docker image to the GKE cluster
       - name: Deploy
         run: |-
-          kubectl rollout restart deployment tickets-depl
+          kubectl rollout restart deployment ticket-depl
