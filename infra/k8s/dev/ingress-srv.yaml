@@ -33,6 +33,13 @@ spec:
                 name: order-srv
                 port:
                   number: 3000
+          - pathType: ImplementationSpecific
+            path: /api/payments/v1/?(.*)
+            backend:
+              service:
+                name: payment-srv
+                port:
+                  number: 3000
           - path: /?(.*)
             pathType: ImplementationSpecific
             backend:

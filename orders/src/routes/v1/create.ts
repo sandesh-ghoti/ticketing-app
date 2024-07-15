@@ -13,7 +13,7 @@ import { OrderCreatedPublisher } from "../../events/publishers/order-created-pub
 import mongoose from "mongoose";
 import { Order } from "../../models/order";
 
-const EXPIRATION_WINDOW_SECONDS = 1 * 10;
+const EXPIRATION_WINDOW_SECONDS = 1 * 60;
 
 const router = express.Router();
 

@@ -6,7 +6,10 @@ declare global {
   var signin: (id?: string) => string[];
 }
 
+process.env.STRIPE_KEY = process.env.STRIPE_TEST_KEY;
+
 jest.mock("../nats-wrapper");
+// jest.mock("../stripe");
 
 let mongo: any;
 //THIS will starts before Testing ...

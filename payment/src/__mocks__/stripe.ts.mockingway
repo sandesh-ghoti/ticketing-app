@@ -1,0 +1,12 @@
+import Stripe from "stripe";
+
+export const stripe = {
+  charges: {
+    create: jest.fn().mockResolvedValue({ id: "123" }),
+  },
+  paymentIntents: {
+    create: jest
+      .fn()
+      .mockResolvedValue({ client_secret: "test_client_secret" }),
+  },
+} as unknown as Stripe;
