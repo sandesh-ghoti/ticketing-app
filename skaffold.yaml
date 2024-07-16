@@ -75,6 +75,8 @@ profiles:
       rawYaml:
         - ./infra/k8s/prod/*
     build:
+      tagPolicy:
+        sha256: {}
       googleCloudBuild:
         projectId: long-stack-426216-q2
       artifacts:
@@ -88,6 +90,38 @@ profiles:
                 dest: .
         - image: us-central1-docker.pkg.dev/long-stack-426216-q2/tickets-repo/client
           context: client
+          docker:
+            dockerfile: Dockerfile
+          sync:
+            manual:
+              - src: "src/**/*.ts"
+                dest: .
+        - image: us-central1-docker.pkg.dev/long-stack-426216-q2/tickets-repo/order
+          context: ./orders
+          docker:
+            dockerfile: Dockerfile
+          sync:
+            manual:
+              - src: "src/**/*.ts"
+                dest: .
+        - image: us-central1-docker.pkg.dev/long-stack-426216-q2/tickets-repo/ticket
+          context: ./tickets
+          docker:
+            dockerfile: Dockerfile
+          sync:
+            manual:
+              - src: "src/**/*.ts"
+                dest: .
+        - image: us-central1-docker.pkg.dev/long-stack-426216-q2/tickets-repo/expiration
+          context: ./expiration
+          docker:
+            dockerfile: Dockerfile
+          sync:
+            manual:
+              - src: "src/**/*.ts"
+                dest: .
+        - image: us-central1-docker.pkg.dev/long-stack-426216-q2/tickets-repo/payment
+          context: ./payment
           docker:
             dockerfile: Dockerfile
           sync:
