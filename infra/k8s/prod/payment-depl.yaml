@@ -17,8 +17,8 @@ spec:
           image: us-central1-docker.pkg.dev/long-stack-426216-q2/tickets-repo/payment
           resources:
             limits:
-              memory: "300Mi"
-              cpu: "200m"
+              memory: "500Mi"
+              cpu: "300m"
           env:
             - name: MONGO_URI
               value: "mongodb://payment-mongo-srv:27017/payment"

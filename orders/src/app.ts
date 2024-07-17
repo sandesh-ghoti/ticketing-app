@@ -10,11 +10,11 @@ app.set("trust proxy", true);
 app.use(json());
 app.use(
   cookieSession({
-    signed: false,
-    secure: process.env.NODE_ENV !== "test",
+    signed: false, //disable encryption: (To be understood between diff languages!) / (JWT is already encrypted)
+    secure: false, //True in PROD (only used with https)  //False in TEST (To work without https)
+    //RQ: NODE_ENV variable are : development | production | test
   })
 );
-
 app.use(currentUser);
 app.use("/api/orders", routes);
 

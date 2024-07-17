@@ -18,8 +18,8 @@ spec:
           imagePullPolicy: Always
           resources:
             limits:
-              memory: "400Mi"
-              cpu: "200m"
+              memory: "500Mi"
+              cpu: "300m"
 ---
 apiVersion: v1
 kind: Service

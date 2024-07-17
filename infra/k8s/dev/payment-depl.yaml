@@ -17,8 +17,8 @@ spec:
           image: payment
           resources:
             limits:
-              memory: "400Mi"
-              cpu: "300m"
+              memory: "600Mi"
+              cpu: "400m"
           env:
             - name: MONGO_URI
               value: "mongodb://payment-mongo-srv:27017/payment"
